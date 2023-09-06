@@ -9,11 +9,28 @@ const books = [
   {id: 2, title: 'Lord of the Rings'}
 ];
 
+function findBook(id) {
+  return books.findIndex(book => {
+    return book.id === Number(id);
+  })
+};
+
 app.get('/', (req, res) => {
   res.status(200).send('Node :)');
 });
 
 app.get('/books', (req, res) => {
+  res.status(200).json(books);
+});
+
+app.get('/books/:id', (req, res) => {
+  const index = findBook(req.params.id);
+  res.status(200).json(books[index]);
+});
+
+app.put('/books/:id', (req, res) => {
+  const index = findBook(req.params.id);
+  books[index].title = req.body.title; 
   res.status(200).json(books);
 });
 
