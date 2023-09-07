@@ -37,6 +37,13 @@ app.put('/books/:id', (req, res) => {
 app.post('/books', (req, res) => {
   books.push(req.body);
   res.status(201).send('book registred');
-})
+});
+
+app.delete('/books/:id', (req, res) => {
+  const index = findBook(req.params.id);
+  books.splice(index, 1);
+  res.status(200).send('book removed');
+});
+
 
 export default app;
