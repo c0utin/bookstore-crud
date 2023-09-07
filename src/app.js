@@ -1,26 +1,35 @@
 import express from "express";
+import connectDatabase from "./config/dbConnnect.js";
+import book from "./models/Book.js"
+
+// Connect database
+
+const connection = await connectDatabase();
+
+connection.on('error', (error) => {
+  console.error("connection error :(", error);
+});
+
+connection.once("open", () => {
+  console.log("connection sucessfull");
+});
+
+// Use express
 
 const app = express();
 
 app.use(express.json());
 
-const books = [
-  {id: 1, title: 'Harry Potter'},
-  {id: 2, title: 'Lord of the Rings'}
-];
-
-function findBook(id) {
-  return books.findIndex(book => {
-    return book.id === Number(id);
-  })
-};
+// Routes
 
 app.get('/', (req, res) => {
   res.status(200).send('Node :)');
 });
 
-app.get('/books', (req, res) => {
-  res.status(200).json(books);
+
+app.get('/books', async(req, res) => {
+  const listBooks = await book.find({});
+  res.status(200).json(listBooks);
 });
 
 app.get('/books/:id', (req, res) => {
