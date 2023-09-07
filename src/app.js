@@ -1,6 +1,6 @@
 import express from "express";
 import connectDatabase from "./config/dbConnnect.js";
-import book from "./models/Book.js"
+import routes from "./routes/index.js";
 
 // Connect database
 
@@ -14,23 +14,8 @@ connection.once("open", () => {
   console.log("connection sucessfull");
 });
 
-// Use express
-
 const app = express();
-
-app.use(express.json());
-
-// Routes
-
-app.get('/', (req, res) => {
-  res.status(200).send('Node :)');
-});
-
-
-app.get('/books', async(req, res) => {
-  const listBooks = await book.find({});
-  res.status(200).json(listBooks);
-});
+routes(app); 
 
 app.get('/books/:id', (req, res) => {
   const index = findBook(req.params.id);
