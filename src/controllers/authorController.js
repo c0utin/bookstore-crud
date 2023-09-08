@@ -1,55 +1,58 @@
-import { author } from "../models/Author.js";
+import { author } from '../models/Author.js';
 
 class AuthorController {
 
-  static async listAuthors (req, res) {
+  static async listAuthors (req, res, next) {
     try {
       const listAuthors = await author.find({});
       res.status(200).json(listAuthors);
     } catch (error) {
-      res.status(500).json({ message: `${error.message} - Request failed` });
+      next(error);
     }
-  };
+  }
 
-  static async listAuthorID (req, res) {
+  static async listAuthorID (req, res, next) {
     try {
       const id = req.params.id;
       const selectedAuthor = await author.findById(id);
-      res.status(200).json(selectedAuthor);
+      if(selectedAuthor !== null){
+        res.status(200).json(selectedAuthor);
+      } else {
+        res.status(404).json({ message: 'Request failed ID not found' });
+      }
     } catch (error) {
-      res.status(500).json({ message: `${error.message} - Request failed` });
+      next(error);
     }
-  };
+  }
 
-  static async registerAuthor (req, res) {
+  static async registerAuthor (req, res, next) {
     try {
       const newAuthor = await author.create(req.body);
       res.status(201).json({ message: 'Successfully created', author: newAuthor });
     } catch (error) {
-      res.status(500).json({ message: `${error.message} - Failed to register` });
+      next(error);
     }
-  };
+  }
 
-  static async updateAuthor (req, res) {
+  static async updateAuthor (req, res, next) {
     try {
       const id = req.params.id;
       await author.findByIdAndUpdate(id, req.body);
       res.status(200).json({ message: 'Successfully updated' });
     } catch (error) {
-      res.status(500).json({ message: ' Failed to update' });
+      next(error);
     }
-  };
+  }
 
-  static async deleteAuthor (req, res) {
+  static async deleteAuthor (req, res, next) {
     try {
       const id = req.params.id;
       await author.findByIdAndDelete(id);
       res.status(200).json({ message: 'Author deleted' });
     } catch (error) {
-      res.status(500).json({ message: `${error.message} - Failed to delete` });
+      next(error);
     }
-  };
-
-};
+  }
+}
 
 export default AuthorController;
