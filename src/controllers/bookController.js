@@ -4,8 +4,8 @@ import { author } from '../models/Author.js';
 class BookController {
 
   static async listBooks (req, res) {
-    const listBooks = await book.find({});
-    res.status(200).json(listBooks);
+    const listbooks = await book.find({}).populate('author').exec();
+    res.status(200).json(listbooks);
   }
 
   static async listBookID (req, res, next) {

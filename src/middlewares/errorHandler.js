@@ -3,7 +3,14 @@ import mongoose from 'mongoose';
 function errorHandler (error, req, res, next) {
   if (error instanceof mongoose.Error.CastError){
     res.status(400).send({ message: 'ID provided is invalid' });
-  } else {
+  } else if (error instanceof mongoose.Error.ValidationError){
+
+    const errorMessage = Object.values(error.errors)
+      .map(error => error.message)
+      .join('; ');
+      
+    res.status(400).send({ message: `Errors found ${errorMessage}` });
+  }else {
     res.status(500).send({ message: 'Internal server error' });
   }
 }
